@@ -42,6 +42,7 @@ if [[ "${DATABASE_URL:-}" =~ ^postgres(ql)?:// ]] || [[ "${DB_HOST:-}" =~ ^postg
   else
     DB_URL="${DB_HOST}"
   fi
+  export DB_URL
 
   eval "$(python - <<'PY'
 import os, urllib.parse, shlex
