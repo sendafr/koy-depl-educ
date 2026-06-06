@@ -1,15 +1,31 @@
 import axios from 'axios';
 
+// Accept either a Render backend URL or the local proxy path.
+const rawApiUrl = import.meta.env.VITE_API_URL || '/api';
+const trimmedApiUrl = rawApiUrl.replace(/\/$/, '');
+const API_BASE_URL = trimmedApiUrl.endsWith('/api')
+  ? trimmedApiUrl
+  : `${trimmedApiUrl}/api`;
+
+if (!import.meta.env.VITE_API_URL) {
+  console.warn('⚠️ VITE_API_URL is not defined, falling back to /api');
+  console.warn('👉 Set VITE_API_URL to your backend host or /api if using the frontend proxy.');
+}
+
+console.log('🚀 RAW VITE_API_URL:', rawApiUrl);
+console.log('🚀 API_BASE_URL:', API_BASE_URL);
+
+
 // Base URL for your Django backend
-const BASE_URL = 'http://localhost:8000/api';
+//const BASE_URL = 'http://localhost:8000/api';
 
 // Create axios instance
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+//const api = axios.create({
+//  baseURL: BASE_URL,
+//  headers: {
+//    'Content-Type': 'application/json',
+//  },
+//});
 
 // JWT Interceptor - Add token to all requests
 api.interceptors.request.use(
