@@ -29,6 +29,9 @@ ENV PATH=/root/.local/bin:$PATH
 # Copy application code
 COPY src_api/ .
 
+# Create required directories
+RUN mkdir -p /app/tmp /app/logs /app/media
+
 # Create startup script with DB wait logic
 RUN cat > /start.sh <<'EOF'
 #!/bin/bash
