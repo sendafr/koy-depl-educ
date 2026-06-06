@@ -12,11 +12,23 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from decouple import config
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def parse_database_url(url):
+    parsed = urlparse(url)
+    return {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed.path.lstrip('/') or os.environ.get('DB_NAME', 'federalism_db'),
+        'USER': parsed.username or os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': parsed.password or os.environ.get('DB_PASSWORD', 'password'),
+        'HOST': parsed.hostname or os.environ.get('DB_HOST', 'db'),
+        'PORT': parsed.port or os.environ.get('DB_PORT', '5432'),
+    }
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -116,21 +128,24 @@ WSGI_APPLICATION = 'fed_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.environ.get('DATABASE_URL')
+DB_HOST_ENV = os.environ.get('DB_HOST', '')
 
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', default='federalism_db'),
-        'USER': os.environ.get('DB_USER', default='postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', default='password'),
-        'HOST': os.environ.get('DB_HOST', default='db'),
-        'PORT': os.environ.get('DB_PORT', default='5432'),
-    
+if DATABASE_URL and DATABASE_URL.startswith(('postgres://', 'postgresql://')):
+    DATABASES = {'default': parse_database_url(DATABASE_URL)}
+elif DB_HOST_ENV.startswith(('postgres://', 'postgresql://')):
+    DATABASES = {'default': parse_database_url(DB_HOST_ENV)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', default='federalism_db'),
+            'USER': os.environ.get('DB_USER', default='postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', default='password'),
+            'HOST': os.environ.get('DB_HOST', default='db'),
+            'PORT': os.environ.get('DB_PORT', default='5432'),
+        }
     }
-
-}
 
 
 
