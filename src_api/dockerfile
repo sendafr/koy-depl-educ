@@ -1,21 +1,35 @@
+# --- Stage 1: Builder (Install dependencies) ---
+FROM python:3.11-slim AS builder
+
+WORKDIR /app
+
+# Install build dependencies (needed for compiling C extensions like psycopg2)
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# --- Stage 2: Runtime (Lean production image) ---
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install runtime dependencies only (no gcc needed here)
 RUN apt-get update && apt-get install -y \
-    gcc \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy installed packages from builder
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
 
-# Copy project files
+# Copy application code
 COPY . .
 
-# Create a startup script to wait for the database, run migrations, and start Gunicorn
+# Create startup script with DB wait logic
 RUN printf '%s\n' \
   '#!/bin/bash' \
   'set -e' \
