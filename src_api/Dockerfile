@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY src_api/requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # --- Stage 2: Runtime (Lean production image) ---
@@ -27,7 +27,7 @@ COPY --from=builder /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
 
 # Copy application code
-COPY . .
+COPY src_api/ .
 
 # Create startup script with DB wait logic
 RUN printf '%s\n' \
