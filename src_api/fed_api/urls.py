@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import FileResponse, Http404
+import os
+from django.conf import settings
 
 # Uncomment these if you are using DRF ViewSets
 #from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -45,3 +48,15 @@ urlpatterns = [
 #Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# Serve Single Page App index for root and unknown routes
+def spa_index(request):
+    index_path = os.path.join(settings.STATIC_ROOT, 'index.html')
+    if os.path.exists(index_path):
+        return FileResponse(open(index_path, 'rb'), content_type='text/html')
+    raise Http404("index.html not found")
+
+urlpatterns += [
+    path('', spa_index),
+]

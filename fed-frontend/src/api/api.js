@@ -15,17 +15,16 @@ if (!import.meta.env.VITE_API_URL) {
 console.log('🚀 RAW VITE_API_URL:', rawApiUrl);
 console.log('🚀 API_BASE_URL:', API_BASE_URL);
 
-
 // Base URL for your Django backend
-//const BASE_URL = 'http://localhost:8000/api';
+const BASE_URL = API_BASE_URL;
 
 // Create axios instance
-//const api = axios.create({
-//  baseURL: BASE_URL,
-//  headers: {
-//    'Content-Type': 'application/json',
-//  },
-//});
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 // JWT Interceptor - Add token to all requests
 api.interceptors.request.use(
