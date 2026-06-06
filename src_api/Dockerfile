@@ -67,7 +67,7 @@ python manage.py migrate --noinput
 echo "Starting Gunicorn..."
 exec gunicorn --config gunicorn.conf.py fed_api.wsgi:application
 EOF
-chmod +x /start.sh
+RUN chmod +x /start.sh
 
 EXPOSE 8000
 
