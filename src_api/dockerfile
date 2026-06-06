@@ -1,0 +1,38 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
+COPY . .
+
+# Create a startup script to wait for the database, run migrations, and start Gunicorn
+RUN printf '%s\n' \
+  '#!/bin/bash' \
+  'set -e' \
+  'export PGPASSWORD="${DB_PASSWORD:-securepassword}"' \
+  '' \
+  'until pg_isready -h "${DB_HOST:-db}" -p "${DB_PORT:-5432}" -U "${DB_USER:-admin}" -d "${DB_NAME:-federalism_db}" >/dev/null 2>&1; do' \
+  '  echo "Waiting for PostgreSQL at ${DB_HOST:-db}:${DB_PORT:-5432}..."' \
+  '  sleep 1' \
+  'done' \
+  '' \
+  'echo "Running migrations..."' \
+  'python manage.py migrate --noinput' \
+  '' \
+  'echo "Starting Gunicorn..."' \
+  'exec gunicorn --config gunicorn.conf.py fed_api.wsgi:application' \
+  > /start.sh && chmod +x /start.sh
+
+EXPOSE 8000
+
+CMD ["/start.sh"]
