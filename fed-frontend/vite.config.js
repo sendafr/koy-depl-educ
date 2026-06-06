@@ -15,5 +15,6 @@ export default defineConfig({
       },
     },
   },
-  base: '/static/',
+  // CHANGE THIS: Use '/' for root serving in production
+  base: '/', 
 })
