@@ -1,2 +1,27 @@
 .env
-.denv
+.denv# Environment variables (NEVER commit these)
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+db.sqlite3
+media/
+staticfiles/
+
+# Docker/Podman
+.docker/
+podman-compose/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
