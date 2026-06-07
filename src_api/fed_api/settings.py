@@ -47,7 +47,7 @@ SECRET_KEY =os.environ.get('SECRET_KEY', 'fallback-key')
 DEBUG = os.environ.get('DEBUG','False')== 'True'
 
 #ALLOWED_HOSTS = ['localhost','127.0.0.1']
-raw_allowed = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1, http://localhost:5173, http://localhost:3000, http://localhost:8080,, https://prime-cordi-fed-devo-7c4aa839.koyeb.app/')
+raw_allowed = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1, http://localhost:5173, http://localhost:3000, http://localhost:8080, https://prime-cordi-fed-devo-7c4aa839.koyeb.app/')
 ALLOWED_HOSTS = [h.strip() for h in raw_allowed.split(',') if h.strip() ]
 
 

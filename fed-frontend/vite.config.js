@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const apiBaseUrl = process.env.VITE_API_URL || 'http://localhost:8000'
+const apiBaseUrl = process.env.VITE_API_URL || 'https://prime-cordi-fed-devo-7c4aa839.keyob.app'
 
 export default defineConfig({
   plugins: [react()],
