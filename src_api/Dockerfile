@@ -19,7 +19,7 @@ ENV PATH=/root/.local/bin:$PATH
 COPY src_api/ .
 
 # Copy Frontend Build
-COPY --from=node_builder /app/frontend/dist ./frontend_dist
+#COPY --from=node_builder /app/frontend/dist ./frontend_dist
 
 # Copy and chmod start.sh
 COPY src_api/start.sh /start.sh
