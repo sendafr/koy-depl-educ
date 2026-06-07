@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y postgresql-client bash && rm -rf /var/l
 COPY --from=builder /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
 
-# Copy Backend Code
-COPY src_api/ .
+# Copy Backend Cod/
+#app
 
 # Copy Frontend Build
 #COPY --from=node_builder /app/frontend/dist ./frontend_dist
