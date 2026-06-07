@@ -30,14 +30,11 @@ COPY src_api/ .
 # Copy Frontend Build
 COPY --from=node_builder /app/frontend/dist ./frontend_dist
 
-# Copy and chmod start.sh
-COPY src_api/start.sh /start.sh
-RUN chmod +x /start.sh
-
 # Create directories
 RUN mkdir -p /app/staticfiles /app/media /app/tmp
 
 EXPOSE 8000
 
-# Use the startup script
-CMD ["/start.sh"]
+# Run the application directly (assuming src_api contains the entry point)
+# Adjust 'python -m src_api' or 'gunicorn' based on your actual entry point
+CMD ["python", "-m", "src_api"]
